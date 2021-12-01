@@ -1,7 +1,9 @@
 import { reactive, computed } from 'vue';
 import Webcam from 'webcamjs';
+import useStorage from './useStorage';
 
 const useCamera = () => {
+  const { uploadStream } = useStorage();
   const state = reactive({
     id: 'dev',
     currentPic: null,
@@ -26,7 +28,10 @@ const useCamera = () => {
   const startFilming = () => {
     intervalId = setInterval(() => {
       if (webCamLoaded) {
-        Webcam.snap((data) => { state.currentPic = data; });
+        Webcam.snap((data) => {
+          state.currentPic = data;
+          uploadStream(state.id, state.currentPic);
+        });
       }
     }, 1000);
   };
