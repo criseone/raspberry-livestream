@@ -3,11 +3,12 @@ import Webcam from 'webcamjs';
 import useStorage from './useStorage';
 
 const useCamera = () => {
-  const { uploadStream } = useStorage();
   const state = reactive({
     id: 'dev',
-    currentPic: null,
+    data: null,
+    stream: null,
   });
+  const { uploadStream, getStream } = useStorage(state.id);
 
   const initCamera = () => {
     Webcam.set({
@@ -28,9 +29,10 @@ const useCamera = () => {
   const startFilming = () => {
     intervalId = setInterval(() => {
       if (webCamLoaded) {
-        Webcam.snap((data) => {
-          state.currentPic = data;
-          uploadStream(state.id, state.currentPic);
+        Webcam.snap(async (data) => {
+          state.data = data;
+          uploadStream(state.data);
+          state.stream = await getStream();
         });
       }
     }, 1000);
@@ -42,7 +44,7 @@ const useCamera = () => {
     initCamera,
     startFilming,
     stopFilming,
-    stream: computed(() => state.currentPic),
+    stream: computed(() => state.stream),
   };
 };
 

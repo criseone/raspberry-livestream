@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getStorage } from 'firebase/storage';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAAEOloOIYeZPE6G48vBuDsc4ZwlWwxMMc',
@@ -13,8 +14,9 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 const storage = getStorage(firebaseApp);
+const auth = getAuth(firebaseApp);
 
 export {
-  // eslint-disable-next-line import/prefer-default-export
   storage,
+  auth,
 };

@@ -1,10 +1,12 @@
 <script>
 import { onMounted } from 'vue';
 import useCamera from '@/hooks/useCamera';
+import useAuth from '@/hooks/useAuth';
 
 export default {
   name: 'Stream',
   setup() {
+    useAuth();
     const {
       initCamera,
       startFilming,

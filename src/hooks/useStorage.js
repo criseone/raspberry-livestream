@@ -1,14 +1,22 @@
-import { ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/firebase';
 
-const useStorage = () => {
-  const uploadStream = (id, file) => {
-    const storageRef = ref(storage, id);
-    uploadBytes(storageRef, file).then(() => {
-      console.log('Uploaded a blob or file!');
+const useStorage = (id) => {
+  const storageRef = ref(storage, `${id}`);
+  const uploadStream = (file) => {
+    uploadString(storageRef, file, 'data_url').then(() => {
+      console.log('Uploaded a data_url string!');
     });
   };
+  const getStream = async () => {
+    let downloadUrl;
+    await getDownloadURL(storageRef).then((url) => {
+      downloadUrl = url;
+    });
+    return downloadUrl;
+  };
   return {
+    getStream,
     uploadStream,
   };
 };
