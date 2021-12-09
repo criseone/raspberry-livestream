@@ -26,13 +26,19 @@ const myCamera = new PiCamera({
   height: 480
 });
 
+let snapFulfilled = true;
+
 setInterval(() => {
-  myCamera.snapDataUrl()
-  .then((result) => {
-    const storageRef = ref(storage, `rpi-stream`);
-    uploadString(storageRef, result, 'data_url').then(() => {
-      console.log('Uploaded a file string!');
-    });
-  })
-  .catch((error) => { console.log(error); });
-}, 10000);
+  if (snapFulfilled){
+     snapFulfilled = false;
+     myCamera.snapDataUrl()
+     .then((result) => {
+       const storageRef = ref(storage, `rpi-stream`);
+       uploadString(storageRef, result, 'data_url').then(() => {
+         console.log('Uploaded a file string!');
+       });
+     })
+     .catch((error) => { console.log(error); })
+     .finally(() => { snapFulfilled = true; });
+  }
+}, 100);
